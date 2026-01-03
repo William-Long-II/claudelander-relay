@@ -7,6 +7,8 @@ import { SessionsModule } from './sessions/sessions.module';
 import { CodesModule } from './codes/codes.module';
 import { RelayModule } from './relay/relay.module';
 import { BillingModule } from './billing/billing.module';
+import { HealthController } from './health/health.controller';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -24,11 +26,13 @@ import { BillingModule } from './billing/billing.module';
         synchronize: process.env.NODE_ENV !== 'production',
       }),
     }),
+    TypeOrmModule.forFeature([User]),
     AuthModule,
     SessionsModule,
     CodesModule,
     RelayModule,
     BillingModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
