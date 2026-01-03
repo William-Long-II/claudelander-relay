@@ -1,0 +1,3 @@
+api.sytanek.tech {
+    reverse_proxy relay:3000
+}
