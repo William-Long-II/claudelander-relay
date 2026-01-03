@@ -5,6 +5,7 @@ import configuration from './config/configuration';
 import { AuthModule } from './auth/auth.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { CodesModule } from './codes/codes.module';
+import { RelayModule } from './relay/relay.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CodesModule } from './codes/codes.module';
     AuthModule,
     SessionsModule,
     CodesModule,
+    RelayModule,
   ],
 })
 export class AppModule {}
