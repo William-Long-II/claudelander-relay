@@ -14,9 +14,7 @@ export class BillingService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {
-    this.stripe = new Stripe(this.configService.get('stripe.secretKey')!, {
-      apiVersion: '2025-04-30.basil',
-    });
+    this.stripe = new Stripe(this.configService.get<string>('stripe.secretKey')!);
   }
 
   async createCheckoutSession(user: User): Promise<{ url: string }> {

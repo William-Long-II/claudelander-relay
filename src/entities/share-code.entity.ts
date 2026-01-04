@@ -26,13 +26,13 @@ export class ShareCode {
   permission: CodePermission;
 
   @Column({ type: 'int', nullable: true })
-  maxUses: number;
+  maxUses: number | null;
 
   @Column({ default: 0 })
   currentUses: number;
 
   @Column({ type: 'timestamptz', nullable: true })
-  expiresAt: Date;
+  expiresAt: Date | null;
 
   @Column({ default: false })
   revoked: boolean;

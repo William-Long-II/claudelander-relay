@@ -81,11 +81,13 @@ export class CodesService {
     }
 
     // Generate unique code
-    let code: string;
+    let generatedCode = '';
     let attempts = 0;
     do {
-      code = this.generateCode();
-      const existing = await this.codesRepository.findOne({ where: { code } });
+      generatedCode = this.generateCode();
+      const existing = await this.codesRepository.findOne({
+        where: { code: generatedCode },
+      });
       if (!existing) break;
       attempts++;
     } while (attempts < 10);
@@ -94,13 +96,12 @@ export class CodesService {
       throw new BadRequestException('Failed to generate unique code');
     }
 
-    const shareCode = this.codesRepository.create({
-      code,
-      sessionId,
-      permission,
-      maxUses: maxUses || null,
-      expiresAt,
-    });
+    const shareCode = new ShareCode();
+    shareCode.code = generatedCode;
+    shareCode.sessionId = sessionId;
+    shareCode.permission = permission;
+    shareCode.maxUses = maxUses || null;
+    shareCode.expiresAt = expiresAt;
 
     return this.codesRepository.save(shareCode);
   }

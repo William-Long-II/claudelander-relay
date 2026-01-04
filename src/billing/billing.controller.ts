@@ -5,9 +5,9 @@ import {
   Req,
   Headers,
   UseGuards,
-  RawBodyRequest,
 } from '@nestjs/common';
-import { Request } from 'express';
+import type { RawBodyRequest } from '@nestjs/common';
+import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BillingService } from './billing.service';
 import { User } from '../entities/user.entity';
