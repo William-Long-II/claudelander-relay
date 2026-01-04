@@ -179,6 +179,10 @@ export class AuthController {
       // Generate JWT
       const jwt = await this.authService.login(user);
       const frontendUrl = this.configService.get('app.frontendUrl');
+
+      // Log JWT for testing (remove in production)
+      this.logger.log(`Generated JWT: ${jwt.accessToken}`);
+
       this.logger.log(`Redirecting to: ${frontendUrl}auth?token=...`);
       res.redirect(`${frontendUrl}auth?token=${jwt.accessToken}`);
 
