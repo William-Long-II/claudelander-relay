@@ -17,7 +17,7 @@ export class SessionsService {
     private sessionsRepository: Repository<ShareSession>,
   ) {}
 
-  async create(user: User, hostPublicKey: string): Promise<ShareSession> {
+  async create(user: User, hostPublicKey: string, sessionName?: string): Promise<ShareSession> {
     // Check tier limits
     const activeCount = await this.countActive(user.id);
     const limit = TIER_LIMITS[user.tier]?.maxShares;
@@ -31,6 +31,7 @@ export class SessionsService {
     const session = this.sessionsRepository.create({
       hostUserId: user.id,
       hostPublicKey,
+      sessionName: sessionName || 'Shared Session',
     });
 
     return this.sessionsRepository.save(session);
