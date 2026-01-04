@@ -26,6 +26,9 @@ export class ShareSession {
   @Column()
   hostPublicKey: string;
 
+  @Column({ nullable: true })
+  sessionName: string;
+
   @CreateDateColumn()
   startedAt: Date;
 
