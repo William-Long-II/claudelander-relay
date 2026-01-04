@@ -147,6 +147,8 @@ export class RelayGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return {
         success: true,
         hostPublicKey: session.hostPublicKey,
+        hostUsername: session.host.username,
+        sessionName: session.sessionName || 'Shared Session',
         permission,
       };
     } catch (e) {
