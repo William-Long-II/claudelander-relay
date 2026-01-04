@@ -20,7 +20,7 @@ export class SessionsController {
 
   @Post()
   create(@Req() req: { user: User }, @Body() dto: CreateSessionDto) {
-    return this.sessionsService.create(req.user, dto.hostPublicKey);
+    return this.sessionsService.create(req.user, dto.hostPublicKey, dto.sessionName);
   }
 
   @Get()
