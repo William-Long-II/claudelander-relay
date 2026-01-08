@@ -1,3 +1,7 @@
 cl-relay.sytanek.tech {
     reverse_proxy relay:3000
 }
+
+cl-mobile.sytanek.tech {
+    reverse_proxy pwa:80
+}
