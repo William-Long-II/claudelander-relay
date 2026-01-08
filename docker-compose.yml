@@ -18,6 +18,16 @@ services:
     depends_on:
       - postgres
 
+  pwa:
+    build:
+      context: ../claudelander-pwa
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -37,6 +47,9 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
+    depends_on:
+      - relay
+      - pwa
 
 volumes:
   pgdata:
