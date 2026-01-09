@@ -1,6 +1,13 @@
 # ClaudeLander Relay Server
 
-Relay server for ClaudeLander session sharing. Enables E2E encrypted live session collaboration.
+Minimal WebSocket relay for ClaudeLander mobile companion app.
+
+## Overview
+
+Routes messages between desktop and mobile clients:
+- Desktop connects with `desktopId`
+- Mobile connects with `desktopId` + `deviceToken`
+- Relay forwards messages; desktop validates tokens
 
 ## Development
 
@@ -8,63 +15,59 @@ Relay server for ClaudeLander session sharing. Enables E2E encrypted live sessio
 # Install dependencies
 npm install
 
-# Set up environment
-cp .env.example .env
-# Edit .env with your values
+# Build
+npm run build
 
-# Start PostgreSQL (or use docker-compose)
-docker-compose up postgres -d
-
-# Run in development
-npm run start:dev
+# Run
+npm run dev
 ```
 
 ## Deployment
 
 ```bash
-# On your VPS
+# On VPS (Ubuntu 24.04)
 git clone https://github.com/William-Long-II/claudelander-relay.git
 cd claudelander-relay
-cp .env.example .env
-# Edit .env with production values
 
-# Deploy
-docker-compose up -d --build
+# Build locally first
+npm install
+npm run build
+
+# Deploy with Docker
+docker compose up -d --build
 ```
 
-## API Endpoints
+**DNS:** Add A record for `cl-relay.sytanek.tech` pointing to your VPS IP.
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/health` | Health check |
-| GET | `/auth/github` | Start OAuth flow |
-| GET | `/auth/github/callback` | OAuth callback |
-| GET | `/auth/me` | Get current user |
-| POST | `/sessions` | Start sharing |
-| GET | `/sessions` | Get active sessions |
-| DELETE | `/sessions/:id` | Stop sharing |
-| POST | `/sessions/:id/codes` | Generate share code |
-| GET | `/sessions/:id/codes` | List session codes |
-| GET | `/codes/:code/validate` | Validate code |
-| DELETE | `/codes/:code` | Revoke code |
-| POST | `/billing/checkout` | Create checkout session |
-| GET | `/billing/portal` | Create portal session |
-| POST | `/billing/webhook` | Stripe webhook |
-| WS | `/relay` | WebSocket relay |
+Caddy will automatically obtain and renew SSL certificates.
 
-## WebSocket Events
+## Endpoints
 
-### Client -> Server
-- `joinAsHost` - Host joins session
-- `joinAsGuest` - Guest joins with code
-- `relay` - Send encrypted data
-- `keyExchange` - Exchange encryption keys
+- `wss://cl-relay.sytanek.tech` - WebSocket relay
+- `https://cl-relay.sytanek.tech/health` - Health check
 
-### Server -> Client
-- `guestJoined` - New guest connected
-- `peerDisconnected` - Peer left
-- `relayData` - Incoming encrypted data
-- `keyExchange` - Incoming key exchange
+## Protocol
+
+### Desktop Connection
+```json
+{ "type": "desktop:connect", "desktopId": "uuid" }
+```
+
+### Mobile Connection
+```json
+{ "type": "mobile:connect", "desktopId": "uuid", "deviceToken": "token" }
+```
+
+### Relay Message
+```json
+{ "type": "relay", "payload": { ... } }
+```
+
+### Notifications
+- `desktop:connected` - Sent to mobile when desktop connects
+- `desktop:disconnected` - Sent to mobile when desktop disconnects
+- `mobile:connected` - Sent to desktop when mobile connects
+- `mobile:disconnected` - Sent to desktop when mobile disconnects
 
 ## License
 

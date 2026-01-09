@@ -1,22 +1,18 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm ci
 
-COPY . .
-RUN npm run build
-
-FROM node:20-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
+# Install dependencies
 RUN npm ci --only=production
 
-COPY --from=builder /app/dist ./dist
+# Copy built files
+COPY dist/ ./dist/
 
-EXPOSE 3000
+# Expose ports
+EXPOSE 3000 3001
 
-CMD ["node", "dist/main"]
+# Run the server
+CMD ["node", "dist/index.js"]

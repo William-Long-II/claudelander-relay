@@ -1,7 +1,9 @@
 cl-relay.sytanek.tech {
+    # WebSocket proxy to relay server
     reverse_proxy relay:3000
-}
 
-cl-mobile.sytanek.tech {
-    reverse_proxy pwa:80
+    # Health check endpoint
+    handle /health {
+        reverse_proxy relay:3001
+    }
 }
